@@ -1,0 +1,15 @@
+{
+  "name": "weather-app-node",
+  "version": "1.0.0",
+  "description": "Weather console app with Node JS",
+  "main": "index.js",
+  "author": "Elis Antonio Perez <elisperezmusic@gmail.com> (https://www.instagram.com/elisperezmusic)",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "colors": "^1.4.0",
+    "dotenv": "^16.0.1",
+    "inquirer": "^8.2.4",
+    "uuid": "^8.3.2"
+  }
+}
