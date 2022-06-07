@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { inquirerMenu, pause, readInput, listCities, listHCities } = require('./helpers/inquirer');
+const { inquirerMenu, pause, readInput, listCities } = require('./helpers/inquirer');
 
 const Searches = require('./models/search');
 
@@ -24,9 +24,10 @@ const main = async () => {
         if (id === '0') continue;
 
         const citySelected = cities.find(city => city.id === id);
+        // console.log(citySelected);
 
         // Save in DB:
-        searches.addHistory(citySelected);
+        searches.addHistory(citySelected.name);
 
         const { name, lat, lon, state, country } = citySelected;
 
@@ -51,35 +52,38 @@ const main = async () => {
 
         break;
       case 2:
-        const citiesH = searches.getHistory();
+        // Show history:
+        // const history = searches.history;
+        // const idHistory = await listCities(history);
+        // if (idHistory === '0') continue;
 
-        // id: id of the city selected.
-        const idS = await listHCities(citiesH);
-        if (idS === '0') continue;
+        // const historySelected = history.find(city => city.id === idHistory);
 
-        const cityHSelected = citiesH.find(city => city.idH === idS);
+        // const { idH, nameH, latH, lonH, stateH, countryH } = historySelected;
 
-        const { nameH, latH, lonH, stateH, countryH } = cityHSelected;
-
-        // Get weather from API:
-        const weatherHistory = await searches.weatherHCity(latH, lonH);
-        const { descH, minH, maxH, tempH } = weatherHistory;
+        // // Get weather from API:
+        // const weatherHistory = await searches.weatherCity(latH, lonH);
+        // const { desc:descH, min:minH, max:maxH, temp:tempH } = weatherHistory;
 
         // Show results
-        console.clear();
-        console.log('\nInformation about the city:'.bgBlue);
-        console.log();
-        console.log(`City: ${nameH.green}`);
-        console.log(`Latitude: ${latH}`);
-        console.log(`Longitude: ${lonH}`);
-        console.log(`State: ${stateH.green}`);
-        console.log(`Country: ${countryH.green}`);
-        console.log('About the weather:');
-        console.log(`Temperature: ${tempH} °C`);
-        console.log(`Description: ${descH.green}`);
-        console.log(`Min temperature: ${minH} °C`);
-        console.log(`Max temperature: ${maxH} °C`);
+        // console.clear();
+        // console.log('\nInformation about the city:'.bgBlue);
+        // console.log();
+        // console.log(`City: ${nameH.green}`);
+        // console.log(`Latitude: ${latH}`);
+        // console.log(`Longitude: ${lonH}`);
+        // console.log(`State: ${stateH.green}`);
+        // console.log(`Country: ${countryH.green}`);
+        // console.log('About the weather:');
+        // console.log(`Temperature: ${tempH} °C`);
+        // console.log(`Description: ${descH.green}`);
+        // console.log(`Min temperature: ${minH} °C`);
+        // console.log(`Max temperature: ${maxH} °C`);
 
+        searches.history.forEach((city, index) => {
+          const idx = `${index + 1}.`.green;
+          console.log(`${idx} ${city}`);
+        });
         break;
     }
     if (opt !== 0) await pause();

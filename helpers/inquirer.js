@@ -93,6 +93,33 @@ const listCities = async (cities = []) => {
   return id;
 };
 
+const listHCities = async (cities = []) => {
+  const choices = cities.map((city, index) => {
+    const idx = `${index + 1}.`.green;
+    return {
+      value: city.idH,
+      name: `${idx} ${city.nameH}, ${city.stateH} - ${city.countryH}`,
+    };
+  });
+
+  choices.unshift({
+    value: '0',
+    name: '0.'.green + ' Cancel',
+  });
+
+  const question = [
+    {
+      type: 'list',
+      name: 'id',
+      message: 'Select a city:',
+      choices,
+    },
+  ];
+
+  const { id } = await inquirer.prompt(question);
+  return id;
+};
+
 const confirm = async message => {
   const question = [
     {
@@ -106,34 +133,12 @@ const confirm = async message => {
   return ok;
 };
 
-// const showChecklist = async (tasks = []) => {
-//   const choices = tasks.map((task, index) => {
-//     const idx = `${index + 1}.`.green;
-//     return {
-//       value: task.id,
-//       name: `${idx} ${task.desc}`,
-//       checked: task.completeIn ? true : false,
-//     };
-//   });
-
-//   const question = [
-//     {
-//       type: 'checkbox',
-//       name: 'ids',
-//       message: 'Select:',
-//       choices,
-//     },
-//   ];
-
-//   const { ids } = await inquirer.prompt(question);
-//   return ids;
-// };
-
 module.exports = {
   inquirerMenu,
   pause,
   readInput,
   listCities,
   confirm,
+  listHCities,
   // showChecklist,
 };

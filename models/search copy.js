@@ -10,9 +10,13 @@ class Searches {
     this.readDB();
   }
 
-  getHistory() {
-    return this.history;
-  }
+  // get capitalizeHistory() {
+  //   return this.history.map(city => {
+  //     let words = city.split(' ');
+  //     words = words.map(w => w[0].toUpperCase() + w.substring(1));
+  //     return words.join(' ');
+  //   });
+  // }
 
   get paramsGeocoding() {
     return {
@@ -74,61 +78,38 @@ class Searches {
     }
   }
 
-  async weatherHCity(lat, lon) {
-    try {
-      const instance = axios.create({
-        baseURL: `https://api.openweathermap.org/data/2.5/weather`,
-        params: { ...this.paramsWeather, lat, lon },
-      });
-
-      const resp = await instance.get();
-      const { main, weather } = resp.data;
-
-      return {
-        descH: weather[0].description,
-        minH: main.temp_min,
-        maxH: main.temp_max,
-        tempH: main.temp,
-      };
-    } catch (error) {
-      console.log(`An error here! => ${error}`);
-    }
-  }
-
-  addHistory(city = {}) {
-    const cityHistory = {
-      idH: `${city.lat}${city.lon}`,
-      nameH: city.name,
-      latH: city.lat,
-      lonH: city.lon,
-      stateH: city.state,
-      countryH: city.country,
-    };
-    if (this.history.some(c => c.idH.includes(cityHistory.idH))) return;
-
-    this.history = this.history.splice(0, 5);
-
-    // Add to history
-    this.history.unshift(cityHistory);
-
-    // Save to DB
-    this.saveDB();
+  addHistory(city = '') {
+    this.history.unshift(city);
   }
 
   saveDB() {
-    const payload = {
-      history: this.history,
-    };
+    const payload = this.history;
+
     fs.writeFileSync(this.dbPath, JSON.stringify(payload));
   }
+  // saveDB() {
+  //   const payload = {
+  //     history: this.history,
+  //   };
+
+  //   fs.writeFileSync(this.dbPath, JSON.stringify(payload));
+  // }
 
   readDB() {
     if (!fs.existsSync(this.dbPath)) return;
 
-    const info = fs.readFileSync(this.dbPath, { encoding: 'utf8' });
-    const data = JSON.parse(info);
-    this.history = data.history;
+    const info = fs.readFileSync(this.dbPath, { encoding: 'utf-8' });
+    // const data = JSON.parse(info);
+    // this.history = data;
+    this.history = info;
   }
+  // readDB() {
+  //   if (!fs.existsSync(this.dbPath)) return;
+
+  //   const info = fs.readFileSync(this.dbPath, { encoding: 'utf8' });
+  //   const data = JSON.parse(info);
+  //   this.history = data.history;
+  // }
 }
 
 module.exports = Searches;
