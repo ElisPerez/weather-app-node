@@ -93,52 +93,9 @@ const listCities = async (cities = []) => {
   return id;
 };
 
-const listHCities = async (cities = []) => {
-  const choices = cities.map((city, index) => {
-    const idx = `${index + 1}.`.green;
-    return {
-      value: city.idH,
-      name: `${idx} ${city.nameH}, ${city.stateH} - ${city.countryH}`,
-    };
-  });
-
-  choices.unshift({
-    value: '0',
-    name: '0.'.green + ' Cancel',
-  });
-
-  const question = [
-    {
-      type: 'list',
-      name: 'id',
-      message: 'Select a city:',
-      choices,
-    },
-  ];
-
-  const { id } = await inquirer.prompt(question);
-  return id;
-};
-
-const confirm = async message => {
-  const question = [
-    {
-      type: 'confirm',
-      name: 'ok',
-      message,
-    },
-  ];
-
-  const { ok } = await inquirer.prompt(question);
-  return ok;
-};
-
 module.exports = {
   inquirerMenu,
   pause,
   readInput,
   listCities,
-  confirm,
-  listHCities,
-  // showChecklist,
 };

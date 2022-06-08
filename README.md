@@ -15,3 +15,7 @@ Follow me: [Instagram](https://www.instagram.com/elisperezmusic)
 
 ### Geocoding API (Premium)
 - API geocoding: https://www.mapbox.com/
+
+### Add History
+- The last 6 cities consulted are saved in a JSON file.
+- Refactored code.

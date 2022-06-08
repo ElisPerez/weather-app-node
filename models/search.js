@@ -1,6 +1,5 @@
 const fs = require('fs');
 const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
 
 class Searches {
   history = [];
@@ -41,7 +40,7 @@ class Searches {
       const resp = await instance.get();
 
       return resp.data.map(({ name, lat, lon, state, country }) => ({
-        id: uuidv4(),
+        id: `${lat}${lon}`,
         name,
         lat,
         lon,
@@ -74,44 +73,11 @@ class Searches {
     }
   }
 
-  async weatherHCity(lat, lon) {
-    try {
-      const instance = axios.create({
-        baseURL: `https://api.openweathermap.org/data/2.5/weather`,
-        params: { ...this.paramsWeather, lat, lon },
-      });
-
-      const resp = await instance.get();
-      const { main, weather } = resp.data;
-
-      return {
-        descH: weather[0].description,
-        minH: main.temp_min,
-        maxH: main.temp_max,
-        tempH: main.temp,
-      };
-    } catch (error) {
-      console.log(`An error here! => ${error}`);
-    }
-  }
-
   addHistory(city = {}) {
-    const cityHistory = {
-      idH: `${city.lat}${city.lon}`,
-      nameH: city.name,
-      latH: city.lat,
-      lonH: city.lon,
-      stateH: city.state,
-      countryH: city.country,
-    };
-    if (this.history.some(c => c.idH.includes(cityHistory.idH))) return;
+    if (this.history.some(c => c.id.includes(city.id))) return;
 
     this.history = this.history.splice(0, 5);
-
-    // Add to history
-    this.history.unshift(cityHistory);
-
-    // Save to DB
+    this.history.unshift(city);
     this.saveDB();
   }
 

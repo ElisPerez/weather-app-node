@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { inquirerMenu, pause, readInput, listCities, listHCities } = require('./helpers/inquirer');
+const showResults = require('./helpers/showResults');
 
 const Searches = require('./models/search');
 
@@ -28,57 +29,25 @@ const main = async () => {
         // Save in DB:
         searches.addHistory(citySelected);
 
-        const { name, lat, lon, state, country } = citySelected;
-
         // Get weather from API:
-        const weather = await searches.weatherCity(lat, lon);
-        const { desc, min, max, temp } = weather;
+        const weather = await searches.weatherCity(citySelected.lat, citySelected.lon);
 
-        // Show results
-        console.clear();
-        console.log('\nInformation about the city:'.bgBlue);
-        console.log();
-        console.log(`City: ${name.green}`);
-        console.log(`Latitude: ${lat}`);
-        console.log(`Longitude: ${lon}`);
-        console.log(`State: ${state.green}`);
-        console.log(`Country: ${country.green}`);
-        console.log('About the weather:');
-        console.log(`Temperature: ${temp} °C`);
-        console.log(`Description: ${desc.green}`);
-        console.log(`Min temperature: ${min} °C`);
-        console.log(`Max temperature: ${max} °C`);
+        showResults(citySelected, weather);
 
         break;
       case 2:
         const citiesH = searches.getHistory();
 
         // id: id of the city selected.
-        const idS = await listHCities(citiesH);
-        if (idS === '0') continue;
+        const idH = await listCities(citiesH);
+        if (idH === '0') continue;
 
-        const cityHSelected = citiesH.find(city => city.idH === idS);
-
-        const { nameH, latH, lonH, stateH, countryH } = cityHSelected;
+        const cityHSelected = citiesH.find(city => city.id === idH);
 
         // Get weather from API:
-        const weatherHistory = await searches.weatherHCity(latH, lonH);
-        const { descH, minH, maxH, tempH } = weatherHistory;
+        const weatherHistory = await searches.weatherCity(cityHSelected.lat, cityHSelected.lon);
 
-        // Show results
-        console.clear();
-        console.log('\nInformation about the city:'.bgBlue);
-        console.log();
-        console.log(`City: ${nameH.green}`);
-        console.log(`Latitude: ${latH}`);
-        console.log(`Longitude: ${lonH}`);
-        console.log(`State: ${stateH.green}`);
-        console.log(`Country: ${countryH.green}`);
-        console.log('About the weather:');
-        console.log(`Temperature: ${tempH} °C`);
-        console.log(`Description: ${descH.green}`);
-        console.log(`Min temperature: ${minH} °C`);
-        console.log(`Max temperature: ${maxH} °C`);
+        showResults(cityHSelected, weatherHistory);
 
         break;
     }
